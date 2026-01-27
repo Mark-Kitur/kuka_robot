@@ -1,15 +1,39 @@
-from setuptools import find_packages, setup
+from setuptools import setup, find_packages
+from glob import glob
+import os
 
 package_name = 'kuka_robot'
 
+# Helper function to recursively collect files in a folder
+def recursive_files(base_dir):
+    files = []
+    for root, dirs, filenames in os.walk(base_dir):
+        for f in filenames:
+            files.append(os.path.join(root, f))
+    return files
+
 setup(
     name=package_name,
-    version='0.0.0',
+    version='0.0.1',
     packages=find_packages(exclude=['test']),
     data_files=[
-        ('share/ament_index/resource_index/packages',
-            ['resource/' + package_name]),
+        # ROS 2 indexing
+        ('share/ament_index/resource_index/packages', [f'resource/{package_name}']),
         ('share/' + package_name, ['package.xml']),
+
+        # Launch/config/URDF
+        ('share/' + package_name + '/launch', glob('launch/*')),
+        ('share/' + package_name + '/config', glob('config/*')),
+        ('share/' + package_name + '/urdf', glob('urdf/*')),
+
+        # Recursive meshes
+        ('share/' + package_name + '/meshes', recursive_files('meshes')),
+
+        # Recursive models
+        ('share/' + package_name + '/models', recursive_files('models')),
+
+        # Worlds
+        ('share/' + package_name + '/worlds', glob('worlds/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
