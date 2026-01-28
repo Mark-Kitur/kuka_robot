@@ -69,23 +69,29 @@ def generate_launch_description():
         }.items()
     )
 
-    # load controllers
+        # load controllers
+    # Spawn joint state broadcaster first
     joint_state_broadcaster = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_controller', '--controller-manager', '/controller_manager']
+        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
+        output='screen'
     )
 
+    # Spawn arm controller
     arm_controller_s = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['arm_controller', '--controller-manager', '/controller_manager']
+        arguments=['arm_controller', '--controller-manager', '/controller_manager'],
+        output='screen'
     )
 
+    # Spawn gripper controller
     gripper_controller_s = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['gripper_controller', '--controller-manager', '/controller_manager']
+        arguments=['gripper_controller', '--controller-manager', '/controller_manager'],
+        output='screen'
     )
 
     # timer
@@ -108,9 +114,8 @@ def generate_launch_description():
     ld.add_action(robot_1)
     # ld.add_action(robot_2)
     ld.add_action(jiont_t)
-    # ld.add_action(control_m)
     ld.add_action(arm_t)
-    # ld.add_action(gripper_t)
+    ld.add_action(gripper_t)
     # ld.add_action(rviz_node)
     # ld.add_action(joint_state_gui)
 

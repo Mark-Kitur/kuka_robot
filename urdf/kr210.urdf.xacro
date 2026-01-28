@@ -16,11 +16,7 @@
   <xacro:property name="gripper_type" value="two_finger" /><!--value="vacuum" or "two_finger"-->
   <xacro:property name="vacuum_gripper_radius" value="0.1" />
 
-    <gazebo>
-        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
-            <parameters>$(find kuka_robot)/config/controllers.yaml</parameters> 
-        </plugin>
-    </gazebo>
+
   <!--Import gazebo elements-->
   <xacro:include filename="$(find kuka_robot)/urdf/kr210.gazebo.xacro" />
 
