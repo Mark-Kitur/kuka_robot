@@ -3,9 +3,12 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from  launch_ros.actions import Node
+from launch.substitutions import PathJoinSubstitution
+from launch.actions import SetEnvironmentVariable, IncludeLaunchDescription
 from ament_index_python.packages import get_package_share_directory
 from launch_ros.substitutions import FindPackageShare
 from launch.substitutions import PathJoinSubstitution
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 
 def generate_launch_description():
@@ -33,11 +36,82 @@ def generate_launch_description():
         name='joint_state_publisher_gui',
         output= 'screen'
     )
+    robot_1=Node(
+        package='gazebo_ros',
+        executable='spawn_entity.py',
+        arguments=['-topic','robot_description',
+                   '-entity','robot',
+                   '-x','0.0',
+                   '-y','0.0',
+                   '-z','0.2'],
+        output='screen'
+    )
+
+    robot_2=Node(
+        package='gazebo_ros',
+        executable='spawn_entity.py',
+        arguments=['-topic','robot_description',
+                   '-entity','robot2',
+                   '-x','5.0',
+                   '-y','5.0',
+                   '-z','0.2'],
+        output='screen'
+    )
+
+
+
+    gazebo_node =IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(
+            get_package_share_directory('gazebo_ros'),'launch','gazebo.launch.py'
+        )]),
+        launch_arguments={
+            'verbose':'true'
+        }.items()
+    )
+
+    # load controllers
+    joint_state_broadcaster = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_state_controller', '--controller-manager', '/controller_manager']
+    )
+
+    arm_controller_s = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['arm_controller', '--controller-manager', '/controller_manager']
+    )
+
+    gripper_controller_s = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['gripper_controller', '--controller-manager', '/controller_manager']
+    )
+
+    # timer
+
+    jiont_t =TimerAction(
+        period=0.0, actions=[joint_state_broadcaster]
+    )
+    arm_t =TimerAction(
+        period=6.0, actions=[arm_controller_s]
+    )
+    gripper_t =TimerAction(
+        period=4.0, actions=[gripper_controller_s]
+    )
+
 
     ld=LaunchDescription()
 
     ld.add_action(robot_state_publisher)
-    ld.add_action(rviz_node)
-    ld.add_action(joint_state_gui)
+    ld.add_action(gazebo_node)
+    ld.add_action(robot_1)
+    # ld.add_action(robot_2)
+    ld.add_action(jiont_t)
+    # ld.add_action(control_m)
+    ld.add_action(arm_t)
+    # ld.add_action(gripper_t)
+    # ld.add_action(rviz_node)
+    # ld.add_action(joint_state_gui)
 
     return ld

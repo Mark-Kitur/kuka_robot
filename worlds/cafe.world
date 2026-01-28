@@ -351,7 +351,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://cafe/meshes/cafe.dae</uri>
+              <uri>models://cafe/meshes/cafe.dae</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>
@@ -380,7 +380,7 @@
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>model://kinematics_shelf/kinematics_shelf.dae</uri>
+              <uri>models://kinematics_shelf/kinematics_shelf.dae</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>
@@ -404,7 +404,7 @@
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>model://kinematics_shelf/kinematics_shelf.dae</uri>
+              <uri>models://kinematics_shelf/kinematics_shelf.dae</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>
@@ -479,7 +479,7 @@
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>model://kinematics_bin/kinematics_bin.dae</uri>
+              <uri>models://kinematics_bin/kinematics_bin.dae</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>
@@ -503,7 +503,7 @@
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>model://kinematics_bin/kinematics_bin.dae</uri>
+              <uri>models://kinematics_bin/kinematics_bin.dae</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>
