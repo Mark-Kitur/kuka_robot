@@ -43,6 +43,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'control_robot = kuka_robot.control:main',
         ],
     },
 )
