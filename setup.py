@@ -4,42 +4,46 @@ import os
 
 package_name = 'kuka_robot'
 
-# Helper function to recursively collect files in a folder
-def recursive_files(base_dir):
-    files = []
-    for root, dirs, filenames in os.walk(base_dir):
-        for f in filenames:
-            files.append(os.path.join(root, f))
-    return files
+def generate_data_files():
+    data_files = [
+        ('share/ament_index/resource_index/packages', [f'resource/{package_name}']),
+        (f'share/{package_name}', ['package.xml']),
+        (f'share/{package_name}/launch', glob('launch/*')),
+        (f'share/{package_name}/config', glob('config/*')),
+        (f'share/{package_name}/urdf', glob('urdf/*')),
+        (f'share/{package_name}/worlds', glob('worlds/*')),
+    ]
+
+    # Recursively install meshes while preserving directory structure
+    for root, _, files in os.walk('meshes'):
+        if files:
+            install_path = os.path.join('share', package_name, root)
+            file_list = [os.path.join(root, f) for f in files]
+            data_files.append((install_path, file_list))
+
+    # Recursively install models while preserving directory structure
+    for root, _, files in os.walk('models'):
+        if files:
+            install_path = os.path.join('share', package_name, root)
+            file_list = [os.path.join(root, f) for f in files]
+            data_files.append((install_path, file_list))
+
+    return data_files
+
 
 setup(
     name=package_name,
     version='0.0.1',
     packages=find_packages(exclude=['test']),
-    data_files=[
-        ('share/ament_index/resource_index/packages', [f'resource/{package_name}']),
-        ('share/' + package_name, ['package.xml']),
-
-        ('share/' + package_name + '/launch', glob('launch/*')),
-        ('share/' + package_name + '/config', glob('config/*')),
-        ('share/' + package_name + '/urdf', glob('urdf/*')),
-
-        ('share/' + package_name + '/meshes', recursive_files('meshes')),
-
-        ('share/' + package_name + '/models', recursive_files('models')),
-
-        ('share/' + package_name + '/worlds', glob('worlds/*')),
-    ],
+    data_files=generate_data_files(),
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='mark',
-    maintainer_email='kimutai.workspace@gmail.com.com',
-    description='TODO: Package description',
+    maintainer_email='kimutai.workspace@gmail.com',
+    description='KUKA KR210 robot with meshes, models, URDF, and Gazebo integration.',
     license='Apache-2.0',
     extras_require={
-        'test': [
-            'pytest',
-        ],
+        'test': ['pytest'],
     },
     entry_points={
         'console_scripts': [
